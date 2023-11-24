@@ -1,0 +1,20 @@
+[
+  {
+    "short_name": "test",
+    "name": "test",
+    "aliases": [
+      "job","test"
+    ],
+    "description": "解析 test 链接生成指定格式内容",
+    "path": "./anko/test.anko"
+  },
+  {
+    "short_name": "hello",
+    "aliases": [
+      "hello", "test"
+    ],
+    "name": "hello world",
+    "description": "解析 test 链接生成指定格式内容",
+    "path": "./anko/hello.anko"
+  }
+]

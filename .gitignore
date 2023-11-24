@@ -19,3 +19,12 @@
 
 # Go workspace file
 go.work
+
+# jetbrains
+.idea
+.idea_modules/
+atlassian-ide-plugin.xml
+
+.DS_Store
+.AppleDouble
+.LSOverride
