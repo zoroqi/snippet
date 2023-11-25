@@ -16,7 +16,6 @@ var execCmd = &cobra.Command{
 }
 
 var execFlag struct {
-	alias string
 }
 
 func init() {
@@ -30,7 +29,7 @@ func exec(cmd *cobra.Command, args []string) error {
 	}
 	snippet := snippets[0]
 	if !snippet.CanExec {
-		return errors.New("execute can't execute")
+		return errors.New("the script cannot execute")
 	}
 	switch snippet.Language {
 	case store.ANKO:

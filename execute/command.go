@@ -1,11 +1,25 @@
 package execute
 
 import (
+	"github.com/zoroqi/snippet/store"
+	"golang.design/x/clipboard"
 	"io"
 	"os"
 	"os/exec"
 	"runtime"
 )
+
+func CopyScriptToClipboard(s store.Snippet) error {
+	if err := clipboard.Init(); err != nil {
+		return err
+	}
+	bs, err := os.ReadFile(s.Path)
+	if err != nil {
+		return err
+	}
+	clipboard.Write(clipboard.FmtText, bs)
+	return err
+}
 
 func EditFileWithVim(file string) error {
 	command := "vim " + file
