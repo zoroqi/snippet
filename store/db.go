@@ -85,7 +85,7 @@ func (db *DB) Add(snippet Snippet, script []byte) error {
 	}
 	filePath := filepath.Dir(snippet.Path)
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		if err := os.MkdirAll(filepath.Dir(filePath), 0755); err != nil {
+		if err := os.MkdirAll(filePath, 0755); err != nil {
 			return err
 		}
 	}

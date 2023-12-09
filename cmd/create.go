@@ -101,8 +101,7 @@ func create(cmd *cobra.Command, args []string) error {
 		}
 		snippet.Language = strings.TrimPrefix(snippet.Language, ".")
 	}
-	db.Add(snippet, script)
-	return nil
+	return db.Add(snippet, script)
 }
 
 func readLine[T any](message string, canBeNull bool, mapper func(string) T) (T, error) {

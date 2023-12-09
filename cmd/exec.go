@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/zoroqi/snippet/execute/anko"
 	"github.com/zoroqi/snippet/store"
@@ -29,7 +30,13 @@ func exec(cmd *cobra.Command, args []string) error {
 	}
 	snippet := snippets[0]
 	if !snippet.CanExec {
-		return errors.New("the script cannot execute")
+		// can execute, print script
+		script, err := store.ReadScript(snippet)
+		if err != nil {
+			return err
+		}
+		fmt.Print(script)
+		return nil
 	}
 	switch snippet.Language {
 	case store.ANKO:

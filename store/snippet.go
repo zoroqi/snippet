@@ -79,11 +79,11 @@ func ShowSnippet(snippet Snippet) (string, error) {
 	write("CanExec", fmt.Sprintf("%v", snippet.CanExec))
 
 	sb.WriteString("\nscript:\n\n")
-	script, err := os.ReadFile(snippet.Path)
+	script, err := ReadScript(snippet)
 	if err != nil {
 		return sb.String(), err
 	}
-	sb.WriteString(string(script))
+	sb.WriteString(script)
 	return sb.String(), nil
 }
 
@@ -154,4 +154,12 @@ func anyMatch(keys []string) findHandler {
 		}
 		return false
 	}
+}
+
+func ReadScript(snip Snippet) (string, error) {
+	script, err := os.ReadFile(snip.Path)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(script)), nil
 }
