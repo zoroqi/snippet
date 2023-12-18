@@ -1,10 +1,16 @@
 package cmd
 
 import (
+	"errors"
 	"github.com/spf13/cobra"
 	"github.com/zoroqi/snippet/store"
 	"log"
 	"os"
+)
+
+var (
+	ERR_FIND_MULTI_SCRIPT = errors.New("find multiple scripts")
+	ERR_FIND_NO_SCRIPT    = errors.New("find no script")
 )
 
 var rootPath string

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"github.com/spf13/cobra"
 	"github.com/zoroqi/snippet/execute"
 )
@@ -17,10 +16,11 @@ func init() {
 	RootCmd.AddCommand(editCmd)
 }
 
-func edit(cmd *cobra.Command, args []string) (err error) {
+func edit(cmd *cobra.Command, args []string) error {
 	snippets := db.Find(searchFlag)
-	if len(snippets) != 1 {
-		return errors.New("find multiple scripts")
+	snippet, err := findOnlySnippet(snippets)
+	if err != nil {
+		return err
 	}
-	return execute.EditFileWithVim(snippets[0].Path)
+	return execute.EditFileWithVim(snippet.Path)
 }

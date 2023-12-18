@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/zoroqi/snippet/execute/anko"
@@ -25,12 +24,11 @@ func init() {
 
 func exec(cmd *cobra.Command, args []string) error {
 	snippets := db.Find(searchFlag)
-	if len(snippets) != 1 {
-		return errors.New("find multiple scripts")
+	snippet, err := findOnlySnippet(snippets)
+	if err != nil {
+		return err
 	}
-	snippet := snippets[0]
 	if !snippet.CanExec {
-		// can execute, print script
 		script, err := store.ReadScript(snippet)
 		if err != nil {
 			return err
