@@ -36,6 +36,10 @@ func exec(cmd *cobra.Command, args []string) error {
 		fmt.Print(script)
 		return nil
 	}
+	return executeSnippet(snippet, args)
+}
+
+func executeSnippet(snippet store.Snippet, args []string) error {
 	switch snippet.Language {
 	case store.ANKO:
 		return anko.Execute(snippet.Path, args)
