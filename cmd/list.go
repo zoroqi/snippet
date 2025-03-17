@@ -7,7 +7,7 @@ import (
 
 var listCmd = &cobra.Command{
 	Use:     "list",
-	Aliases: []string{"ls"},
+	Aliases: []string{"ls", "l"},
 	Short:   "Show all snippets",
 	Long:    `Show all snippets`,
 	RunE:    list,
@@ -18,7 +18,7 @@ func init() {
 }
 
 func list(cmd *cobra.Command, args []string) error {
-	snippets := db.Snippets
+	snippets := db.Find(searchFlag, args)
 	store.SnippetPrintTable(snippets)
 	return nil
 }

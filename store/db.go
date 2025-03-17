@@ -123,8 +123,8 @@ func (db *DB) Remove(snippet Snippet) error {
 	return db.Save()
 }
 
-func (db *DB) Find(search Search) []Snippet {
-	return findSnippet(search, db.Snippets)
+func (db *DB) Find(search Search, keywords []string) []Snippet {
+	return findSnippet(search, db.Snippets, keywords)
 }
 
 func loadSnippets(root string) ([]Snippet, []string, error) {
@@ -163,33 +163,6 @@ func loadSnippets(root string) ([]Snippet, []string, error) {
 		snippets = append(snippets, pets...)
 	}
 	return snippets, dbFiles, nil
-}
-
-func (db *DB) FuzzySnippet(keys []string) []Snippet {
-	r := []Snippet{}
-	dup := map[string]bool{}
-	for _, s := range keys {
-		for _, snippet := range db.Snippets {
-			if dup[snippet.Path] {
-				continue
-			}
-			if !strings.Contains(snippet.ShortName, s) {
-				continue
-			}
-			if !strings.Contains(snippet.Name, s) {
-				continue
-			}
-			if !strings.Contains(snippet.Description, s) {
-				continue
-			}
-			if !strings.Contains(strings.Join(snippet.Aliases, " "), s) {
-				continue
-			}
-			dup[snippet.Path] = true
-			r = append(r, snippet)
-		}
-	}
-	return r
 }
 
 // 寻找最近的db文件

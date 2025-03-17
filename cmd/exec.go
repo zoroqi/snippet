@@ -23,7 +23,7 @@ func init() {
 }
 
 func exec(cmd *cobra.Command, args []string) error {
-	snippets := db.Find(searchFlag)
+	snippets := db.Find(searchFlag, []string{})
 	snippet, err := findOnlySnippet(snippets)
 	if err != nil {
 		return err

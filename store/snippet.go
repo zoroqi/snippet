@@ -37,6 +37,10 @@ type Search struct {
 	Fuzzy   string
 }
 
+func (s *Search) isEmpty() bool {
+	return s.ShortName == "" && s.Name == "" && s.Aliases == "" && s.Fuzzy == "" && len(s.Tags) == 0
+}
+
 func SnippetPrintTable(snippets []Snippet) {
 	header := []string{fmt.Sprintf("short_name(%d)", len(snippets)), "name", "aliases", "can_exec", "description", "tags", "path"}
 	table := tablewriter.NewWriter(os.Stdout)
@@ -89,35 +93,66 @@ func ShowSnippet(snippet Snippet) (string, error) {
 
 type findHandler func(string) bool
 
-func findSnippet(search Search, snippets []Snippet) []Snippet {
+func findSnippet(search Search, snippets []Snippet, keywords []string) []Snippet {
+	if search.isEmpty() && len(keywords) == 0 {
+		return snippets
+	}
 	short := match(search.ShortName)
 	name := match(search.Name)
 	alias := match(search.Aliases)
 	tags := anyMatch(search.Tags)
 	fuzzy := contain(search.Fuzzy)
-	r := []Snippet{}
+	repeating := map[string]bool{}
+	result := []Snippet{}
+	addResult := func(snippet Snippet) {
+		if repeating[snippet.Path] {
+			return
+		}
+		repeating[snippet.Path] = true
+		result = append(result, snippet)
+	}
 Outer:
 	for _, s := range snippets {
 		if short(s.ShortName) || name(s.Name) {
-			r = append(r, s)
+			addResult(s)
 		}
 		for _, a := range s.Aliases {
 			if alias(a) {
-				r = append(r, s)
+				addResult(s)
 				continue Outer
 			}
 		}
 		for _, t := range s.Tags {
 			if tags(t) {
-				r = append(r, s)
+				addResult(s)
 				continue Outer
 			}
 		}
 		if fuzzy(s.Description) {
-			r = append(r, s)
+			addResult(s)
 		}
 	}
-	return r
+	for _, s := range snippets {
+		flag := true
+		if len(keywords) == 0 {
+			continue
+		}
+		for _, t := range keywords {
+			f := strings.Contains(s.ShortName, t)
+			f = f || strings.Contains(s.Name, t)
+			for _, a := range s.Aliases {
+				f = f || strings.Contains(a, t)
+			}
+			for _, tg := range s.Tags {
+				f = f || strings.Contains(tg, t)
+			}
+			flag = flag && f
+		}
+		if flag {
+			addResult(s)
+		}
+	}
+	return result
 }
 
 func contain(key string) findHandler {

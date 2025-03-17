@@ -21,7 +21,7 @@ func init() {
 }
 
 func show(cmd *cobra.Command, args []string) error {
-	snippets := db.Find(searchFlag)
+	snippets := db.Find(searchFlag, args)
 	for _, snippet := range snippets {
 		s, err := store.ShowSnippet(snippet)
 		fmt.Println(s)
